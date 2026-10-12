@@ -10,15 +10,22 @@ const PAGES_ENDPOINT = `${API_BASE}/rest_event_pages?_format=json`;
 const TICKET_BASE = "https://tickets.planetarium.berlin/de/Event/Detail?Event=";
 const LOCATION_ID = "1"; // Zeiss-Großplanetarium Prenzlauer Berg
 
+// Client Cache Config (15 min TTL)
+const CACHE_KEY_DATES = "cosmo_cache_dates_v1";
+const CACHE_KEY_PAGES = "cosmo_cache_pages_v1";
+const CACHE_KEY_TIME = "cosmo_cache_time_v1";
+const CACHE_TTL_MS = 15 * 60 * 1000;
+
 // App State
 let state = {
   allEvents: [],        // All normalized events for Zeiss-Großplanetarium
   filteredEvents: [],   // Currently filtered events
   filters: {
     annualPassOnly: true, // tickettype=1 by default as requested
-    date: "all"
+    date: null          // Set dynamically to today or earliest show date
   },
   availableDates: [],   // List of unique upcoming dates
+  userSelectedDate: false,
   isLoading: true
 };
 
@@ -31,6 +38,8 @@ const elements = {
   emptyState: document.getElementById("empty-state"),
   btnRetry: document.getElementById("btn-retry"),
   btnRefresh: document.getElementById("btn-refresh"),
+  btnTheme: document.getElementById("btn-theme"),
+  themeIcon: document.getElementById("theme-icon"),
   btnResetFilters: document.getElementById("btn-reset-filters"),
   btnEmptyReset: document.getElementById("btn-empty-reset"),
   btnToggleAnnual: document.getElementById("btn-toggle-annual"),
@@ -52,8 +61,34 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 async function initApp() {
+  initTheme();
   setupEventListeners();
   await loadData();
+}
+
+// Theme Controller
+function initTheme() {
+  const currentTheme = localStorage.getItem("cosmo_theme") || "light";
+  applyTheme(currentTheme);
+
+  if (elements.btnTheme) {
+    elements.btnTheme.addEventListener("click", () => {
+      const activeTheme = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      localStorage.setItem("cosmo_theme", activeTheme);
+      applyTheme(activeTheme);
+    });
+  }
+}
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  if (elements.themeIcon) {
+    elements.themeIcon.textContent = theme === "dark" ? "☀️" : "🌙";
+  }
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  if (metaTheme) {
+    metaTheme.setAttribute("content", theme === "dark" ? "#060813" : "#f1f5f9");
+  }
 }
 
 function registerServiceWorker() {
@@ -78,6 +113,23 @@ function setupEventListeners() {
     elements.btnToggleAnnual.classList.toggle("active", state.filters.annualPassOnly);
     elements.btnToggleAnnual.setAttribute("aria-pressed", state.filters.annualPassOnly.toString());
     updateAnnualToggleLabel();
+
+    // Check if currently selected date still has shows in the new pass mode
+    const candidateEvents = state.allEvents.filter((e) => {
+      if (state.filters.annualPassOnly && !e.isAnnualPass) return false;
+      return true;
+    });
+    const candidateDates = new Set(candidateEvents.map((e) => e.dateStr));
+    if (state.filters.date !== "all" && !candidateDates.has(state.filters.date)) {
+      const todayStr = getBerlinDateString(new Date());
+      if (candidateDates.has(todayStr)) {
+        state.filters.date = todayStr;
+      } else {
+        const sorted = Array.from(candidateDates).sort();
+        state.filters.date = sorted[0] || "all";
+      }
+    }
+
     renderDateTabs();
     applyFilters();
   });
@@ -97,11 +149,11 @@ function setupEventListeners() {
   // Refresh & Retry
   elements.btnRefresh.addEventListener("click", () => {
     elements.btnRefresh.classList.add("spinning");
-    loadData().finally(() => {
+    loadData(true).finally(() => {
       setTimeout(() => elements.btnRefresh.classList.remove("spinning"), 600);
     });
   });
-  elements.btnRetry.addEventListener("click", loadData);
+  elements.btnRetry.addEventListener("click", () => loadData(true));
 
   // Modal close
   elements.modalCloseBtn.addEventListener("click", closeModal);
@@ -116,15 +168,34 @@ function setupEventListeners() {
 }
 
 function resetFilters() {
+  state.userSelectedDate = true;
   state.filters.date = "all";
   renderDateTabs();
   applyFilters();
 }
 
-// Data Fetching
-async function loadData() {
+// Data Fetching with 15-Minute Client-Side Cache
+async function loadData(forceRefresh = false) {
   showLoading(true);
   hideError();
+
+  // Try loading from sessionStorage cache if not forcing refresh
+  if (!forceRefresh) {
+    try {
+      const cachedTime = parseInt(sessionStorage.getItem(CACHE_KEY_TIME), 10);
+      if (cachedTime && Date.now() - cachedTime < CACHE_TTL_MS) {
+        const rawDates = JSON.parse(sessionStorage.getItem(CACHE_KEY_DATES));
+        const rawPages = JSON.parse(sessionStorage.getItem(CACHE_KEY_PAGES));
+        if (Array.isArray(rawDates) && Array.isArray(rawPages) && rawDates.length > 0) {
+          processData(rawDates, rawPages);
+          showLoading(false);
+          return;
+        }
+      }
+    } catch (e) {
+      console.warn("[CosmoBubs] Cache read error:", e);
+    }
+  }
 
   try {
     // Fetch both datasets concurrently
@@ -138,6 +209,15 @@ async function loadData() {
 
     const rawDates = await datesRes.json();
     const rawPages = await pagesRes.json();
+
+    // Cache responses for fast subsequent navigation
+    try {
+      sessionStorage.setItem(CACHE_KEY_DATES, JSON.stringify(rawDates));
+      sessionStorage.setItem(CACHE_KEY_PAGES, JSON.stringify(rawPages));
+      sessionStorage.setItem(CACHE_KEY_TIME, Date.now().toString());
+    } catch (e) {
+      console.warn("[CosmoBubs] Cache write warning:", e);
+    }
 
     processData(rawDates, rawPages);
     showLoading(false);
@@ -272,6 +352,23 @@ function processData(rawDates, rawPages) {
 
   state.allEvents = processed;
 
+  // Sane Default Date: Select today (or earliest upcoming show date) instead of dumping all 1,200+ shows
+  const candidateEvents = processed.filter((e) => {
+    if (state.filters.annualPassOnly && !e.isAnnualPass) return false;
+    return true;
+  });
+  const candidateDates = new Set(candidateEvents.map((e) => e.dateStr));
+  const todayStr = getBerlinDateString(new Date());
+
+  if (!state.userSelectedDate || (state.filters.date !== "all" && !candidateDates.has(state.filters.date))) {
+    if (candidateDates.has(todayStr)) {
+      state.filters.date = todayStr;
+    } else {
+      const sorted = Array.from(candidateDates).sort();
+      state.filters.date = sorted[0] || "all";
+    }
+  }
+
   updateAnnualToggleLabel();
   renderDateTabs();
   applyFilters();
@@ -386,9 +483,19 @@ function renderDateTabs() {
     tab.addEventListener("click", () => {
       elements.dateScroller.querySelectorAll(".date-tab").forEach((t) => t.classList.remove("active"));
       tab.classList.add("active");
+      state.userSelectedDate = true;
       state.filters.date = tab.getAttribute("data-date");
       applyFilters();
+      tab.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
     });
+  });
+
+  // Auto-scroll active tab into view
+  requestAnimationFrame(() => {
+    const activeTab = elements.dateScroller.querySelector(".date-tab.active");
+    if (activeTab) {
+      activeTab.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    }
   });
 }
 

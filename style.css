@@ -2,17 +2,85 @@
    COSMOBUBS - Modern Cosmic Theme for Zeiss-Großplanetarium Berlin
    ========================================================================== */
 
-:root {
+:root,
+html[data-theme="light"] {
   --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  /* Palette */
+  /* Palette - Light Celestial / Observatory Theme */
+  --bg-cosmos: #f1f5f9;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #f8fafc;
+  --bg-surface-glass: rgba(255, 255, 255, 0.88);
+  --header-bg: rgba(241, 245, 249, 0.88);
+  --thumb-bg: #e2e8f0;
+  --tag-bg: rgba(15, 23, 42, 0.05);
+
+  --border-subtle: rgba(15, 23, 42, 0.08);
+  --border-highlight: rgba(99, 102, 241, 0.28);
+  --border-gold: rgba(217, 119, 6, 0.35);
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --text-inverse: #ffffff;
+
+  /* Accents */
+  --cyan-bright: #0284c7;
+  --cyan-glow: rgba(2, 132, 199, 0.18);
+  --indigo-accent: #4f46e5;
+  --purple-accent: #7c3aed;
+  --magenta-accent: #db2777;
+  --gold-accent: #d97706;
+  --gold-glow: rgba(217, 119, 6, 0.2);
+
+  /* Status */
+  --status-available: #059669;
+  --status-low: #d97706;
+  --status-soldout: #dc2626;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  --shadow-card: 0 4px 16px -2px rgba(15, 23, 42, 0.06), 0 0 1px 1px rgba(15, 23, 42, 0.04);
+  --shadow-glow: 0 0 20px -3px rgba(79, 70, 229, 0.15);
+  --shadow-gold: 0 0 18px -3px rgba(217, 119, 6, 0.2);
+
+  --stars-opacity: 0.35;
+  --nebula-opacity: 0.16;
+  --nebula-1-gradient: radial-gradient(circle, #818cf8 0%, transparent 70%);
+  --nebula-2-gradient: radial-gradient(circle, #f472b6, #38bdf8 50%, transparent 70%);
+
+  --date-tab-active-bg: linear-gradient(180deg, rgba(2, 132, 199, 0.1) 0%, rgba(79, 70, 229, 0.14) 100%);
+  --divider-bg: linear-gradient(90deg, rgba(2, 132, 199, 0.08) 0%, rgba(255, 255, 255, 0.75) 100%);
+  --divider-today-bg: linear-gradient(90deg, rgba(217, 119, 6, 0.12) 0%, rgba(255, 255, 255, 0.75) 100%);
+  --divider-tomorrow-bg: linear-gradient(90deg, rgba(79, 70, 229, 0.1) 0%, rgba(255, 255, 255, 0.75) 100%);
+  --skeleton-bg: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+  --modal-backdrop-bg: rgba(15, 23, 42, 0.55);
+  --modal-grid-bg: rgba(15, 23, 42, 0.04);
+  --gradient-logo: linear-gradient(135deg, #0284c7 0%, #4f46e5 50%, #7c3aed 100%);
+  --venue-badge-bg: rgba(79, 70, 229, 0.08);
+  --venue-badge-color: #4338ca;
+  --venue-badge-border: rgba(79, 70, 229, 0.22);
+  --btn-book-bg: linear-gradient(135deg, #0284c7 0%, #4f46e5 100%);
+  --btn-book-text: #ffffff;
+  --btn-book-shadow: 0 3px 10px rgba(2, 132, 199, 0.25);
+  --toggle-inactive-bg: rgba(15, 23, 42, 0.12);
+}
+
+html[data-theme="dark"] {
+  /* Palette - Dark Cosmic Theme */
   --bg-cosmos: #060813;
   --bg-surface: #0e1224;
   --bg-surface-elevated: #161c36;
   --bg-surface-glass: rgba(14, 18, 36, 0.75);
-  
+  --header-bg: rgba(6, 8, 19, 0.88);
+  --thumb-bg: #0d1124;
+  --tag-bg: rgba(255, 255, 255, 0.05);
+
   --border-subtle: rgba(255, 255, 255, 0.08);
   --border-highlight: rgba(255, 255, 255, 0.16);
   --border-gold: rgba(245, 158, 11, 0.4);
@@ -22,7 +90,6 @@
   --text-muted: #64748b;
   --text-inverse: #030712;
 
-  /* Accents */
   --cyan-bright: #00f2fe;
   --cyan-glow: rgba(0, 242, 254, 0.35);
   --indigo-accent: #6366f1;
@@ -31,19 +98,34 @@
   --gold-accent: #fbbf24;
   --gold-glow: rgba(251, 191, 36, 0.3);
 
-  /* Status */
   --status-available: #10b981;
   --status-low: #f59e0b;
   --status-soldout: #ef4444;
 
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 20px;
-  --radius-full: 9999px;
-
   --shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.6), 0 0 1px 1px rgba(255, 255, 255, 0.05);
   --shadow-glow: 0 0 25px -5px var(--cyan-glow);
   --shadow-gold: 0 0 20px -3px var(--gold-glow);
+
+  --stars-opacity: 0.65;
+  --nebula-opacity: 0.22;
+  --nebula-1-gradient: radial-gradient(circle, #6366f1, transparent 70%);
+  --nebula-2-gradient: radial-gradient(circle, #ec4899, #00f2fe 50%, transparent 70%);
+
+  --date-tab-active-bg: linear-gradient(180deg, rgba(0, 242, 254, 0.18) 0%, rgba(99, 102, 241, 0.25) 100%);
+  --divider-bg: linear-gradient(90deg, rgba(0, 242, 254, 0.08) 0%, rgba(14, 18, 36, 0.55) 100%);
+  --divider-today-bg: linear-gradient(90deg, rgba(251, 191, 36, 0.12) 0%, rgba(14, 18, 36, 0.55) 100%);
+  --divider-tomorrow-bg: linear-gradient(90deg, rgba(99, 102, 241, 0.12) 0%, rgba(14, 18, 36, 0.55) 100%);
+  --skeleton-bg: linear-gradient(90deg, #13172e 25%, #1d2345 50%, #13172e 75%);
+  --modal-backdrop-bg: rgba(3, 5, 12, 0.85);
+  --modal-grid-bg: rgba(0, 0, 0, 0.25);
+  --gradient-logo: linear-gradient(135deg, #00f2fe 0%, #4facfe 50%, #c084fc 100%);
+  --venue-badge-bg: rgba(99, 102, 241, 0.18);
+  --venue-badge-color: #a5b4fc;
+  --venue-badge-border: rgba(99, 102, 241, 0.3);
+  --btn-book-bg: linear-gradient(135deg, #00f2fe 0%, #38bdf8 100%);
+  --btn-book-text: #030712;
+  --btn-book-shadow: 0 3px 10px rgba(0, 242, 254, 0.25);
+  --toggle-inactive-bg: rgba(255, 255, 255, 0.12);
 }
 
 *, *::before, *::after {
@@ -81,30 +163,33 @@ body {
   position: absolute;
   inset: 0;
   background-image: 
-    radial-gradient(1px 1px at 20px 30px, #ffffff, rgba(0,0,0,0)),
-    radial-gradient(1.5px 1.5px at 120px 80px, #ffffff, rgba(0,0,0,0)),
-    radial-gradient(1px 1px at 240px 150px, #a5b4fc, rgba(0,0,0,0)),
-    radial-gradient(1.5px 1.5px at 320px 40px, #ffffff, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 20px 30px, currentColor, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 120px 80px, currentColor, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 240px 150px, #6366f1, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 320px 40px, currentColor, rgba(0,0,0,0)),
     radial-gradient(2px 2px at 450px 220px, #00f2fe, rgba(0,0,0,0)),
-    radial-gradient(1px 1px at 560px 110px, #ffffff, rgba(0,0,0,0)),
-    radial-gradient(1.5px 1.5px at 700px 300px, #fbcfe8, rgba(0,0,0,0)),
-    radial-gradient(1px 1px at 850px 80px, #ffffff, rgba(0,0,0,0));
+    radial-gradient(1px 1px at 560px 110px, currentColor, rgba(0,0,0,0)),
+    radial-gradient(1.5px 1.5px at 700px 300px, #ec4899, rgba(0,0,0,0)),
+    radial-gradient(1px 1px at 850px 80px, currentColor, rgba(0,0,0,0));
   background-size: 550px 550px;
-  opacity: 0.65;
+  color: var(--text-primary);
+  opacity: var(--stars-opacity);
+  transition: opacity 0.3s ease;
 }
 
 .nebula {
   position: absolute;
   filter: blur(80px);
   border-radius: 50%;
-  opacity: 0.22;
+  opacity: var(--nebula-opacity);
   pointer-events: none;
+  transition: opacity 0.3s ease;
 }
 
 .nebula-1 {
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, #6366f1, transparent 70%);
+  background: var(--nebula-1-gradient);
   top: -100px;
   left: -100px;
 }
@@ -112,7 +197,7 @@ body {
 .nebula-2 {
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, #ec4899, #00f2fe 50%, transparent 70%);
+  background: var(--nebula-2-gradient);
   top: 400px;
   right: -200px;
 }
@@ -131,12 +216,13 @@ body {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(6, 8, 19, 0.88);
+  background: var(--header-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border-subtle);
   margin: 0 -16px 20px;
   padding: calc(12px + env(safe-area-inset-top, 0px)) 16px 14px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .brand-row {
@@ -169,11 +255,11 @@ body {
   font-weight: 900;
   letter-spacing: -0.03em;
   line-height: 1;
-  color: #ffffff;
+  color: var(--text-primary);
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, #00f2fe 0%, #4facfe 50%, #c084fc 100%);
+  background: var(--gradient-logo);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -188,9 +274,9 @@ body {
 }
 
 .venue-badge {
-  background: rgba(99, 102, 241, 0.18);
-  color: #a5b4fc;
-  border: 1px solid rgba(99, 102, 241, 0.3);
+  background: var(--venue-badge-bg);
+  color: var(--venue-badge-color);
+  border: 1px solid var(--venue-badge-border);
   padding: 1px 7px;
   border-radius: var(--radius-full);
   font-size: 0.68rem;
@@ -295,7 +381,7 @@ body {
 .toggle-switch-indicator {
   width: 36px;
   height: 20px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--toggle-inactive-bg);
   border-radius: var(--radius-full);
   position: relative;
   margin-left: 4px;
@@ -332,7 +418,7 @@ body {
 }
 
 .annual-pass-toggle.active .toggle-status {
-  color: #fef08a;
+  color: var(--gold-accent);
 }
 
 .annual-pass-toggle.active .toggle-switch-indicator {
@@ -341,12 +427,12 @@ body {
 
 .annual-pass-toggle.active .toggle-switch-indicator::after {
   transform: translateX(16px);
-  background: #1e1b18;
+  background: #ffffff;
 }
 
 .chip {
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-subtle);
   color: var(--text-muted);
   font-family: var(--font-body);
   font-size: 0.78rem;
@@ -359,14 +445,14 @@ body {
 }
 
 .chip:hover {
-  color: var(--text-secondary);
-  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--text-primary);
+  border-color: var(--border-highlight);
 }
 
 .chip.active {
   background: var(--bg-surface-elevated);
-  color: #00f2fe;
-  border-color: rgba(0, 242, 254, 0.4);
+  color: var(--cyan-bright);
+  border-color: var(--cyan-bright);
   font-weight: 600;
 }
 
@@ -465,21 +551,21 @@ body {
 }
 
 .date-tab.active {
-  background: linear-gradient(180deg, rgba(0, 242, 254, 0.18) 0%, rgba(99, 102, 241, 0.25) 100%);
+  background: var(--date-tab-active-bg);
   border-color: var(--cyan-bright);
-  box-shadow: 0 0 16px -3px rgba(0, 242, 254, 0.35);
+  box-shadow: 0 0 16px -3px var(--cyan-glow);
 }
 
 .date-tab.active .date-day-label {
-  color: #00f2fe;
+  color: var(--cyan-bright);
 }
 
 .date-tab.active .date-number {
-  color: #ffffff;
+  color: var(--text-primary);
 }
 
 .date-tab.active .date-count-badge {
-  color: #a5b4fc;
+  color: var(--indigo-accent);
 }
 
 /* Status & Results Summary Bar */
@@ -513,7 +599,7 @@ body {
 .reset-filters-btn {
   background: transparent;
   border: 1px dashed var(--border-highlight);
-  color: #00f2fe;
+  color: var(--cyan-bright);
   font-size: 0.75rem;
   font-weight: 600;
   padding: 4px 10px;
@@ -523,7 +609,7 @@ body {
 }
 
 .reset-filters-btn:hover {
-  background: rgba(0, 242, 254, 0.1);
+  background: var(--cyan-glow);
   border-color: var(--cyan-bright);
 }
 
@@ -550,12 +636,12 @@ body {
   padding: 8px 12px;
   margin-top: 14px;
   margin-bottom: 2px;
-  background: linear-gradient(90deg, rgba(0, 242, 254, 0.08) 0%, rgba(14, 18, 36, 0.55) 100%);
+  background: var(--divider-bg);
   border-left: 3px solid var(--cyan-bright);
   border-radius: var(--radius-sm);
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  border-right: 1px solid rgba(255, 255, 255, 0.05);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--border-subtle);
+  border-right: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
   user-select: none;
 }
 
@@ -564,7 +650,7 @@ body {
 }
 
 .day-divider.is-today {
-  background: linear-gradient(90deg, rgba(251, 191, 36, 0.12) 0%, rgba(14, 18, 36, 0.55) 100%);
+  background: var(--divider-today-bg);
   border-left-color: var(--gold-accent);
 }
 
@@ -573,12 +659,12 @@ body {
 }
 
 .day-divider.is-tomorrow {
-  background: linear-gradient(90deg, rgba(99, 102, 241, 0.12) 0%, rgba(14, 18, 36, 0.55) 100%);
-  border-left-color: #818cf8;
+  background: var(--divider-tomorrow-bg);
+  border-left-color: var(--indigo-accent);
 }
 
 .day-divider.is-tomorrow .day-divider-prefix {
-  color: #a5b4fc;
+  color: var(--indigo-accent);
 }
 
 .day-divider-left {
@@ -596,7 +682,7 @@ body {
 }
 
 .day-divider-sep {
-  color: rgba(255, 255, 255, 0.22);
+  color: var(--border-highlight);
   font-size: 0.72rem;
 }
 
@@ -612,7 +698,7 @@ body {
   font-size: 0.7rem;
   font-weight: 600;
   color: var(--text-muted);
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--tag-bg);
   padding: 2px 8px;
   border-radius: var(--radius-full);
 }
@@ -636,17 +722,17 @@ body {
 
 .event-card:hover {
   transform: translateY(-2px);
-  border-color: rgba(0, 242, 254, 0.35);
-  box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.6), 0 0 15px -5px rgba(0, 242, 254, 0.2);
+  border-color: var(--cyan-bright);
+  box-shadow: var(--shadow-card), var(--shadow-glow);
 }
 
 .event-card.card-annual-pass {
-  border-color: rgba(245, 158, 11, 0.22);
+  border-color: var(--border-gold);
 }
 
 .event-card.card-annual-pass:hover {
   border-color: var(--gold-accent);
-  box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.6), var(--shadow-gold);
+  box-shadow: var(--shadow-card), var(--shadow-gold);
 }
 
 /* Thumbnail Column */
@@ -657,7 +743,7 @@ body {
   flex-shrink: 0;
   border-radius: var(--radius-sm);
   overflow: hidden;
-  background-color: #0d1124;
+  background-color: var(--thumb-bg);
   cursor: pointer;
 }
 
@@ -677,7 +763,7 @@ body {
   position: absolute;
   top: 3px;
   left: 3px;
-  background: rgba(15, 23, 42, 0.88);
+  background: var(--bg-surface-elevated);
   border-radius: 50%;
   width: 18px;
   height: 18px;
@@ -685,8 +771,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(245, 158, 11, 0.4);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-gold);
 }
 
 /* Main Info Column */
@@ -769,8 +855,8 @@ body {
 }
 
 .btn-book-compact {
-  background: linear-gradient(135deg, #00f2fe 0%, #38bdf8 100%);
-  color: #030712;
+  background: var(--btn-book-bg);
+  color: var(--btn-book-text);
   font-family: var(--font-display);
   font-size: 0.78rem;
   font-weight: 800;
@@ -783,17 +869,16 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
-  box-shadow: 0 3px 10px rgba(0, 242, 254, 0.2);
+  box-shadow: var(--btn-book-shadow);
 }
 
 .btn-book-compact:hover {
   filter: brightness(1.1);
   transform: translateY(-1px);
-  box-shadow: 0 5px 14px rgba(0, 242, 254, 0.35);
 }
 
 .btn-book-compact.sold-out {
-  background: rgba(255, 255, 255, 0.07);
+  background: var(--tag-bg);
   color: var(--text-muted);
   box-shadow: none;
   cursor: not-allowed;
@@ -818,7 +903,7 @@ body {
   height: 62px;
   flex-shrink: 0;
   border-radius: var(--radius-sm);
-  background: linear-gradient(90deg, #13172e 25%, #1d2345 50%, #13172e 75%);
+  background: var(--skeleton-bg);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
@@ -830,6 +915,13 @@ body {
   gap: 8px;
 }
 
+.skeleton-line {
+  border-radius: 4px;
+  background: var(--skeleton-bg);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
 .skeleton-line.line-sm { height: 10px; width: 35%; }
 .skeleton-line.line-lg { height: 16px; width: 80%; }
 .skeleton-line.line-md { height: 12px; width: 50%; }
@@ -839,7 +931,7 @@ body {
   height: 34px;
   flex-shrink: 0;
   border-radius: var(--radius-sm);
-  background: linear-gradient(90deg, #13172e 25%, #1d2345 50%, #13172e 75%);
+  background: var(--skeleton-bg);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
@@ -913,7 +1005,7 @@ body {
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(3, 5, 12, 0.85);
+  background: var(--modal-backdrop-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   z-index: 100;
@@ -999,7 +1091,7 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
-  background: rgba(0, 0, 0, 0.25);
+  background: var(--modal-grid-bg);
   border-radius: var(--radius-md);
   padding: 14px;
 }
